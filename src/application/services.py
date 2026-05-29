@@ -22,46 +22,58 @@ from src.infraestructure.repository import(RolRepository, UsuarioRepository, Bas
 #Rol Service
 
 class RolService:
-    def _init_(self, db:Session):
-        #creamos una instancia del repositorio pasando la sesion de la base de datos
+    def __init__(self, db: Session):
+        # creamos una instancia del repositorio
         self.repo = RolRepository(db)
-        
-        def listar(self)-> List[Roles]:
-            return self.repo.get_all()
-        
-        def obtener(self, id_rol:int) -> Optional[Roles]:
-            return self.repo.get_by_id(id_rol)
-        
-        def crear(self, nombreRol:str) ->Roles: #crea el objeto en memoria
-            return self.repo.create(Roles(nombre_rol=nombreRol))
-        
-        def eliminar(self,id_rol:int) -> bool:
-           return self.repo.delete(id_rol)
+
+    def listar(self) -> List[Roles]:
+        return self.repo.get_all()
+
+    def obtener(self, id_rol: int) -> Optional[Roles]:
+        return self.repo.get_by_id(id_rol)
+
+    def crear(self, nombreRol: str) -> Roles:
+        return self.repo.create(
+            Roles(nombre_rol=nombreRol)
+        )
+
+    def eliminar(self, id_rol: int) -> bool:
+        return self.repo.delete(id_rol)
 
 #Usuario Service
 
 class UsuarioService:
-    def _init_(self, db:Session):
-        #creamos una instancia del repositorio pasando la sesion de la base de datos
+    def __init__(self, db: Session):
         self.repo = UsuarioRepository(db)
 
-        def listar(self)-> List[Usuario]:
-            return self.repo.get_all()
-        
-        def obtener(self, id_usuario:int) -> Optional[Usuario]:
-            return self.repo.get_by_id(id_usuario)
-        
-        def obtenerNombre(self, nombre_usuario:str) -> Optional[Usuario]:  #crea el objeto en memoria
-            return self.repo.get_by_nombre(nombre_usuario)
-        
-        def obtenerCorreo(self, correo:str) -> Optional[Usuario]:
-            return self.repo.get_by_correo(correo)
-        
-        def crear(self, id_rol:int, nombre_completo: str, correo: str, password: str) -> Usuario:
-            newUsuario = Usuario(
-                id_rol = id_rol,
-                nombre_completo = nombre_completo,
-                correo = correo,
-                contrasena_hash = password
-            )
-            return self.repo.create(Usuario) #entrega al repo para que haga el insert
+    def listar(self) -> List[Usuario]:
+        return self.repo.get_all()
+
+    def obtener(self, id_usuario: int) -> Optional[Usuario]:
+        return self.repo.get_by_id(id_usuario)
+
+    def obtenerNombre(self, nombre_usuario: str) -> Optional[Usuario]:
+        return self.repo.get_by_nombre(nombre_usuario)
+
+    def obtenerCorreo(self, correo: str) -> Optional[Usuario]:
+        return self.repo.get_by_correo(correo)
+
+    def crear(
+        self,
+        id_rol: int,
+        nombre_completo: str,
+        correo: str,
+        password: str
+    ) -> Usuario:
+
+        newUsuario = Usuario(
+            id_rol=id_rol,
+            nombre_completo=nombre_completo,
+            correo=correo,
+            contrasena_hash=password
+        )
+
+        return self.repo.create(newUsuario)
+    
+    def eliminar(self, id_usuario: int) -> bool:     
+        return self.repo.delete(id_usuario)

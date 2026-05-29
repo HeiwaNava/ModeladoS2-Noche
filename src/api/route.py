@@ -77,7 +77,7 @@ def crear_usuario(data:UsuarioCreate, db: Session=Depends(get_db)):
     if not RolService(db).obtener(data.id_rol):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="El rol especificado no existe")
     try:
-        return UsuarioService(db).crear(data.id_rol, data.nombre_completo, data.correo, data.contrasena_hash)
+        return UsuarioService(db).crear(data.id_rol, data.nombre_completo, data.correo, data.contraseña_hash)
     except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No se puede crear el usuario. Verifique correo o datos duplicados.")
