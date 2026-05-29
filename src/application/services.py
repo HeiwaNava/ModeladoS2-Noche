@@ -12,18 +12,22 @@
 #Repositorio = Ejecuta las consultas SQL CRUD
 #Infraestructura = no es conocida por el API
 
-from datetime import datetime
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from src.domain.models import (Roles, Usuario, Estudiante, Profesor, Recursos)
 
-from src.infraestructure.repository import(RolRepository, UsuarioRepository, BaseRepository)
+from src.domain.models import Usuario, Roles
+from src.infraestructure.repository import (
+    UsuarioRepository,
+    RolRepository
+)
 
-#Rol Service
+
+# ======================
+# ROL SERVICE
+# ======================
 
 class RolService:
     def __init__(self, db: Session):
-        # creamos una instancia del repositorio
         self.repo = RolRepository(db)
 
     def listar(self) -> List[Roles]:
@@ -32,15 +36,16 @@ class RolService:
     def obtener(self, id_rol: int) -> Optional[Roles]:
         return self.repo.get_by_id(id_rol)
 
-    def crear(self, nombreRol: str) -> Roles:
-        return self.repo.create(
-            Roles(nombre_rol=nombreRol)
-        )
+    def crear(self, nombre_rol: str) -> Roles:
+        nuevo_rol = Roles(nombre_rol=nombre_rol)
+        return self.repo.create(nuevo_rol)
 
     def eliminar(self, id_rol: int) -> bool:
         return self.repo.delete(id_rol)
 
-#Usuario Service
+# ======================
+# USUARIO SERVICE
+# ======================
 
 class UsuarioService:
     def __init__(self, db: Session):
@@ -63,17 +68,33 @@ class UsuarioService:
         id_rol: int,
         nombre_completo: str,
         correo: str,
-        password: str
+        contrasena_hash: str
     ) -> Usuario:
 
-        newUsuario = Usuario(
+        nuevo_usuario = Usuario(
             id_rol=id_rol,
             nombre_completo=nombre_completo,
             correo=correo,
-            contrasena_hash=password
+            contrasena_hash=contrasena_hash
         )
 
-        return self.repo.create(newUsuario)
-    
-    def eliminar(self, id_usuario: int) -> bool:     
+        return self.repo.create(nuevo_usuario)
+
+    def eliminar(self, id_usuario: int) -> bool:
         return self.repo.delete(id_usuario)
+
+    def actualizar(
+        self,
+        id_usuario: int,
+        **kwargs
+    ) -> Optional[Usuario]:
+
+        usuario = self.repo.get_by_id(id_usuario)
+
+        if not usuario:
+            return None
+
+        for key, value in kwargs.items():
+            setattr(usuario, key, value)
+
+        return self.repo.update(usuario)
