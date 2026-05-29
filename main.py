@@ -31,6 +31,6 @@ app.add_middleware(
 app.include_router(router)
 
 #endpoint de salud, para ver si la api esta funcionando o no
-@app.get("/",tags=["Healht salud check"])
+@app.get("/",tags=["Healht salud"])
 def healht_check():
     return{"Status": "ok", "api": "IUTEDE Backend", "Version": "1.0.0"}
